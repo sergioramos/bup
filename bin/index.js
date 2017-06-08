@@ -16,19 +16,13 @@ const makeDir = require('make-dir');
 const uniq = require('lodash.uniq');
 const forceArray = require('force-array');
 
-const appendExternalHelpers = conf => {
-  conf.plugins = forceArray(conf.plugins);
-  conf.plugins = uniq(conf.plugins.concat(['external-helpers']));
-  return conf;
-};
-
 const babelConfig = async ({ root, pkg }) => {
   const dotrc = path.join(root, '.babelrc');
   const dotrcExists = await exists(dotrc);
 
   if (dotrcExists) {
     const str = await readFile(dotrc, 'utf-8');
-    return appendExternalHelpers(JSON.parse(str));
+    return JSON.parse(str);
   }
 
   const dotjson = path.join(root, '.babelrc.json');
@@ -36,37 +30,41 @@ const babelConfig = async ({ root, pkg }) => {
 
   if (dotjsonExists) {
     const str = await readFile(dotjson, 'utf-8');
-    return appendExternalHelpers(JSON.parse(str));
+    return JSON.parse(str);
   }
 
-  return appendExternalHelpers(pkg.babel || {});
+  return (pkg.babel || {});
 };
 
 const build = async ({ pkg, main, external, root }) => {
+  const config = await babelConfig({ root, pkg });
+
   const bundle = await rollup({
     entry: main,
     external: external,
+    sourceMap: true,
     plugins: [
       babel(
         babelrc({
-          config: await babelConfig({ root, pkg })
+          config: config,
+          addExternalHelpersPlugin: true
         })
       )
     ]
   });
 
   const write = fmt => async () => {
-    const { code } = bundle.generate({
+    const { code, map } = bundle.generate({
       format: fmt,
       moduleId: pkg.name,
       moduleName: pkg.name,
-      sourceMap: 'inline'
+      sourceMap: true
     });
 
     const file = await dest({ root, main, fmt, pkg });
 
     await makeDir(path.dirname(file));
-    return writeFile(file, code);
+    return writeFile(file, `${code}\n\/\/\# sourceMappingURL=${map.toUrl()}`);
   };
 
   return parallel([write('umd'), write('es'), write('iife')]);
