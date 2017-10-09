@@ -13,8 +13,6 @@ const readPkg = require('read-pkg');
 const pkgDir = require('pkg-dir');
 const { rollup } = require('rollup');
 const makeDir = require('make-dir');
-const uniq = require('lodash.uniq');
-const forceArray = require('force-array');
 
 const babelConfig = async ({ root, pkg }) => {
   const dotrc = path.join(root, '.babelrc');
@@ -33,7 +31,7 @@ const babelConfig = async ({ root, pkg }) => {
     return JSON.parse(str);
   }
 
-  return (pkg.babel || {});
+  return pkg.babel || {};
 };
 
 const build = async ({ pkg, main, external, root }) => {
@@ -41,12 +39,12 @@ const build = async ({ pkg, main, external, root }) => {
 
   const bundle = await rollup({
     entry: main,
-    external: external,
-    sourceMap: true,
+    external,
+    sourcemap: true,
     plugins: [
       babel(
         babelrc({
-          config: config,
+          config,
           addExternalHelpersPlugin: true
         })
       )
@@ -64,7 +62,7 @@ const build = async ({ pkg, main, external, root }) => {
     const file = await dest({ root, main, fmt, pkg });
 
     await makeDir(path.dirname(file));
-    return writeFile(file, `${code}\n\/\/\# sourceMappingURL=${map.toUrl()}`);
+    return writeFile(file, `${code}\n//# sourceMappingURL=${map.toUrl()}`);
   };
 
   return parallel([write('umd'), write('es'), write('iife')]);
@@ -95,7 +93,7 @@ const getPkg = async dir => {
     return;
   }
 
-  return await readPkg(pathanme);
+  return readPkg(pathanme);
 };
 
 const pkgEntry = async location => {
@@ -110,7 +108,7 @@ const entry = async location => {
   const isDir = (await stat(location)).isDirectory();
 
   if (!isDir) {
-    return pathanme;
+    return location;
   }
 
   const index = path.join(location, 'index.js');
@@ -141,7 +139,7 @@ const run = async () => {
     argv._.push('.');
   }
 
-  return await forEach(argv._, async arg => {
+  return forEach(argv._, async arg => {
     const location = path.resolve(process.cwd(), arg);
     const main = await entry(location);
     const root = await pkgDir(main);
