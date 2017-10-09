@@ -1,6 +1,6 @@
 {
   "name": "bup",
-  "version": "2.0.3",
+  "version": "2.0.5",
   "description": "Automated rollup build based on babelrc",
   "license": "BSD-3-Clause",
   "author": "Sérgio Ramos <mail@sergioramos.me>",
@@ -20,6 +20,7 @@
     "apr-parallel": "^1.0.5",
     "babel-plugin-external-helpers": "^6.22.0",
     "babelrc-rollup": "3.0.0",
+    "camel-case": "^3.0.0",
     "make-dir": "^1.0.0",
     "mz": "^2.7.0",
     "param-case": "^2.1.1",

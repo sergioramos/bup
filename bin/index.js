@@ -12,6 +12,7 @@ const main = require('apr-main');
 const readPkg = require('read-pkg');
 const pkgDir = require('pkg-dir');
 const { rollup } = require('rollup');
+const camelCase = require('camel-case');
 const makeDir = require('make-dir');
 
 const babelConfig = async ({ root, pkg }) => {
@@ -38,7 +39,7 @@ const build = async ({ pkg, main, external, root }) => {
   const config = await babelConfig({ root, pkg });
 
   const bundle = await rollup({
-    entry: main,
+    input: main,
     external,
     sourcemap: true,
     plugins: [
@@ -54,9 +55,9 @@ const build = async ({ pkg, main, external, root }) => {
   const write = fmt => async () => {
     const { code, map } = await bundle.generate({
       format: fmt,
-      moduleId: pkg.name,
-      moduleName: pkg.name,
-      sourceMap: true
+      amd: { id: pkg.name },
+      name: fmt === 'iife' ? camelCase(pkg.name) : pkg.name,
+      sourcemap: true
     });
 
     const file = await dest({ root, main, fmt, pkg });
