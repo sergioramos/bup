@@ -52,7 +52,7 @@ const build = async ({ pkg, main, external, root }) => {
   });
 
   const write = fmt => async () => {
-    const { code, map } = bundle.generate({
+    const { code, map } = await bundle.generate({
       format: fmt,
       moduleId: pkg.name,
       moduleName: pkg.name,
