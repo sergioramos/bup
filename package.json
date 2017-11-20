@@ -1,48 +1,46 @@
 {
   "name": "bup",
-  "version": "2.0.6",
+  "version": "3.0.0",
   "description": "Automated rollup build based on babelrc",
   "license": "BSD-3-Clause",
   "author": "Sérgio Ramos <mail@sergioramos.me>",
   "repository": "github:ramitos/bup",
-  "keywords": [],
-  "files": [
-    "bin"
-  ],
+  "keywords": ["babel", "rollup", "config", "babelrc", "lib"],
+  "files": ["bin"],
   "bin": "bin/index.js",
   "scripts": {
-    "fmt": "prettier --write --single-quote bin/*.js",
+    "fmt": "prettier --write --single-quote *.md bin/*.js *.json",
     "lint": "eslint bin/*.js --fix"
   },
   "dependencies": {
     "apr-for-each": "^1.0.6",
-    "apr-main": "^1.0.7",
+    "apr-main": "^2.0.2",
     "apr-parallel": "^1.0.5",
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
     "babelrc-rollup": "3.0.0",
     "camel-case": "^3.0.0",
-    "make-dir": "^1.0.0",
+    "make-dir": "^1.1.0",
     "mz": "^2.7.0",
     "param-case": "^2.1.1",
     "pkg-dir": "^2.0.0",
-    "read-pkg": "^2.0.0",
-    "rollup": "0.50.0",
+    "read-pkg": "^3.0.0",
+    "rollup": "0.51.8",
     "rollup-plugin-babel": "3.0.2",
-    "yargs": "^9.0.1"
+    "yargs": "^10.0.3"
   },
   "devDependencies": {
-    "babel-eslint": "^8.0.1",
-    "eslint": "4.8.0",
-    "eslint-config-joyent-portal": "^3.0.0",
-    "eslint-config-prettier": "^2.6.0",
+    "babel-eslint": "^8.0.2",
+    "eslint": "4.11.0",
+    "eslint-config-joyent-portal": "^3.2.0",
+    "eslint-config-prettier": "^2.8.0",
     "eslint-config-react-app": "^2.0.1",
-    "eslint-config-xo-space": "^0.16.0",
+    "eslint-config-xo-space": "^0.17.0",
     "eslint-plugin-flowtype": "^2.39.1",
-    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-prettier": "^2.3.1",
-    "eslint-plugin-react": "^7.4.0",
-    "prettier": "1.7.4"
+    "eslint-plugin-react": "^7.5.1",
+    "prettier": "1.8.2"
   }
 }
