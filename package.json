@@ -25,22 +25,22 @@
     "param-case": "^2.1.1",
     "pkg-dir": "^2.0.0",
     "read-pkg": "^3.0.0",
-    "rollup": "0.51.8",
-    "rollup-plugin-babel": "3.0.2",
-    "yargs": "^10.0.3"
+    "rollup": "0.54.0",
+    "rollup-plugin-babel": "3.0.3",
+    "yargs": "^10.1.1"
   },
   "devDependencies": {
-    "babel-eslint": "^8.0.2",
-    "eslint": "4.11.0",
+    "babel-eslint": "^8.2.1",
+    "eslint": "4.15.0",
     "eslint-config-joyent-portal": "^3.2.0",
-    "eslint-config-prettier": "^2.8.0",
-    "eslint-config-react-app": "^2.0.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-react-app": "^2.1.0",
     "eslint-config-xo-space": "^0.17.0",
-    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-flowtype": "^2.41.0",
     "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-prettier": "^2.3.1",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-prettier": "^2.5.0",
     "eslint-plugin-react": "^7.5.1",
-    "prettier": "1.8.2"
+    "prettier": "1.10.2"
   }
 }
