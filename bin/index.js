@@ -14,6 +14,7 @@ const path = require('path');
 const argv = require('yargs').argv;
 const forEach = require('apr-for-each');
 const parallel = require('apr-parallel');
+const debounce = require('lodash.debounce');
 const main = require('apr-main');
 const readPkg = require('read-pkg');
 const pkgDir = require('pkg-dir');
@@ -154,6 +155,8 @@ const external = async ({ pkg }) => {
 };
 
 const run = async () => {
+  console.log('-> Running bup');
+
   if (!argv._.length) {
     argv._.push('.');
   }
@@ -179,10 +182,6 @@ const run = async () => {
   });
 };
 
-const watch = () => {
-  return chokidar
-    .watch(watchPattern)
-    .on('all', () => run.catch(err => console.error(err)));
-};
+const watch = async () => chokidar.watch(watchPattern).on('all', debounce(500, () => run().catch(err => console.error(err))));
 
 main(watchPattern ? watch() : run());
