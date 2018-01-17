@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 
-const babel = require('rollup-plugin-babel');
+const { rollup } = require('rollup');
 const { default: babelrc } = require('babelrc-rollup');
+const babel = require('rollup-plugin-babel');
+const nodeResolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+const json = require('rollup-plugin-json');
+const sourceMaps = require('rollup-plugin-sourcemaps');
+
 const { exists, stat, writeFile, readFile } = require('mz/fs');
 const paramCase = require('param-case');
 const path = require('path');
@@ -11,9 +17,10 @@ const parallel = require('apr-parallel');
 const main = require('apr-main');
 const readPkg = require('read-pkg');
 const pkgDir = require('pkg-dir');
-const { rollup } = require('rollup');
 const camelCase = require('camel-case');
 const makeDir = require('make-dir');
+
+const destName = argv['dest-name'];
 
 const babelConfig = async ({ root, pkg }) => {
   const dotrc = path.join(root, '.babelrc');
@@ -41,14 +48,19 @@ const build = async ({ pkg, main, external, root }) => {
   const bundle = await rollup({
     input: main,
     external,
-    sourcemap: true,
     plugins: [
       babel(
         babelrc({
           config,
           addExternalHelpersPlugin: true
         })
-      )
+      ),
+      json(),
+      nodeResolve(),
+      sourceMaps(),
+      commonjs({
+        ignoreGlobal: true,
+      })
     ]
   });
 
@@ -71,7 +83,11 @@ const build = async ({ pkg, main, external, root }) => {
 
 const dest = async ({ root, main, fmt, pkg }) => {
   if (!pkg) {
-    return path.join(process.cwd(), `dist/index.${fmt}.js`);
+    return path.join(process.cwd(), `dist/${destName || 'index'}.${fmt}.js`);
+  }
+
+  if (destName) {
+    return path.join(root, `dist/${paramCase(destName)}.${fmt}.js`);
   }
 
   if (!pkg.entry || path.resolve(pkg.entry) === path.resolve(main)) {
