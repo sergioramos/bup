@@ -19,8 +19,10 @@ const readPkg = require('read-pkg');
 const pkgDir = require('pkg-dir');
 const camelCase = require('camel-case');
 const makeDir = require('make-dir');
+const chokidar = require('chokidar');
 
 const destName = argv['dest-name'];
+const watchPattern = argv['watch'];
 
 const babelConfig = async ({ root, pkg }) => {
   const dotrc = path.join(root, '.babelrc');
@@ -59,7 +61,7 @@ const build = async ({ pkg, main, external, root }) => {
       nodeResolve(),
       sourceMaps(),
       commonjs({
-        ignoreGlobal: true,
+        ignoreGlobal: true
       })
     ]
   });
@@ -177,4 +179,10 @@ const run = async () => {
   });
 };
 
-main(run());
+const watch = () => {
+  return chokidar
+    .watch(watchPattern)
+    .on('all', () => run.catch(err => console.error(err)));
+};
+
+main(watchPattern ? watch() : run());
