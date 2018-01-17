@@ -182,6 +182,9 @@ const run = async () => {
   });
 };
 
-const watch = async () => chokidar.watch(watchPattern).on('all', debounce(500, () => run().catch(err => console.error(err))));
+const watch = async () =>
+  chokidar
+    .watch(watchPattern)
+    .on('all', debounce(() => run().catch(err => console.error(err)), 500));
 
 main(watchPattern ? watch() : run());
