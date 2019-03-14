@@ -1,6 +1,6 @@
 {
   "name": "bup",
-  "version": "4.1.4",
+  "version": "4.1.6",
   "description": "Automated rollup build based on babelrc",
   "license": "BSD-3-Clause",
   "author": "Sérgio Ramos <mail@sergioramos.me>",
@@ -17,44 +17,52 @@
   ],
   "bin": "bin/index.js",
   "scripts": {
-    "fmt": "prettier --write --single-quote *.md bin/*.js *.json",
-    "lint": "eslint bin/*.js --fix"
+    "fmt": "prettier --config .prettierrc --write '**/*'",
+    "lint": "eslint . --ext .js"
   },
   "dependencies": {
+    "@babel/core": "^7.3.4",
     "apr-for-each": "^3.0.3",
     "apr-main": "^4.0.3",
     "apr-parallel": "^3.0.3",
-    "babel-core": "^6.26.0",
-    "babel-plugin-external-helpers": "^6.22.0",
     "babelrc-rollup": "3.0.0",
     "camel-case": "^3.0.0",
-    "chokidar": "^2.0.0",
+    "chokidar": "^2.1.2",
     "lodash.debounce": "^4.0.8",
-    "make-dir": "^1.1.0",
+    "make-dir": "^2.1.0",
     "mz": "^2.7.0",
     "param-case": "^2.1.1",
-    "pkg-dir": "^2.0.0",
-    "read-pkg": "^3.0.0",
-    "rollup": "0.55.1",
-    "rollup-plugin-babel": "3.0.3",
-    "rollup-plugin-commonjs": "^8.3.0",
-    "rollup-plugin-json": "^2.3.0",
-    "rollup-plugin-node-resolve": "^3.0.2",
-    "rollup-plugin-sourcemaps": "^0.4.2",
-    "yargs": "^11.0.0"
+    "pkg-dir": "^4.0.0",
+    "read-pkg": "^5.0.0",
+    "rollup": "1.6.0",
+    "rollup-plugin-babel": "4.3.2",
+    "rollup-plugin-commonjs": "^9.2.1",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^4.0.1",
+    "yargs": "^13.2.2"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.1",
-    "eslint": "4.16.0",
-    "eslint-config-joyent-portal": "^3.3.1",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-config-react-app": "^2.1.0",
-    "eslint-config-xo-space": "^0.17.0",
-    "eslint-plugin-flowtype": "^2.42.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-prettier": "^2.5.0",
-    "eslint-plugin-react": "^7.6.1",
-    "prettier": "1.10.2"
+    "eslint": "5.15.1",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-config-xo-space": "^0.21.0",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.5",
+    "prettier": "^1.16.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --config .prettierrc --write",
+      "git add"
+    ],
+    "*.*": [
+      "prettier --config .prettierrc --write",
+      "git add"
+    ]
   }
 }

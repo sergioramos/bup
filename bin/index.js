@@ -11,8 +11,8 @@ const sourceMaps = require('rollup-plugin-sourcemaps');
 const { exists, stat, writeFile, readFile } = require('mz/fs');
 const paramCase = require('param-case');
 const path = require('path');
-const argv = require('yargs').argv;
-const forEach = require('apr-for-each');
+const { argv } = require('yargs');
+const { default: forEach } = require('apr-for-each');
 const parallel = require('apr-parallel');
 const debounce = require('lodash.debounce');
 const main = require('apr-main');
@@ -23,7 +23,7 @@ const makeDir = require('make-dir');
 const chokidar = require('chokidar');
 
 const destName = argv['dest-name'];
-const watchPattern = argv['watch'];
+const watchPattern = argv.watch;
 
 const babelConfig = async ({ root, pkg }) => {
   const dotrc = path.join(root, '.babelrc');
@@ -55,12 +55,11 @@ const build = async ({ pkg, main, external, root }) => {
       babel(
         babelrc({
           config,
-          addExternalHelpersPlugin: true
+          addExternalHelpersPlugin: false
         })
       ),
       json(),
       nodeResolve(),
-      sourceMaps(),
       commonjs({
         ignoreGlobal: true
       })
@@ -68,17 +67,19 @@ const build = async ({ pkg, main, external, root }) => {
   });
 
   const write = fmt => async () => {
-    const { code, map } = await bundle.generate({
+    const { output = [] } = await bundle.generate({
       format: fmt,
       amd: { id: pkg.name },
       name: fmt === 'iife' ? camelCase(pkg.name) : pkg.name,
       sourcemap: true
     });
 
-    const file = await dest({ root, main, fmt, pkg });
+    await forEach(output, async ({ code, map }) => {
+      const file = await dest({ root, main, fmt, pkg });
 
-    await makeDir(path.dirname(file));
-    return writeFile(file, `${code}\n//# sourceMappingURL=${map.toUrl()}`);
+      await makeDir(path.dirname(file));
+      return writeFile(file, `${code}\n//# sourceMappingURL=${map.toUrl()}`);
+    });
   };
 
   return parallel([write('umd'), write('es'), write('iife')]);
@@ -155,6 +156,7 @@ const external = async ({ pkg }) => {
 };
 
 const run = async () => {
+  // eslint-disable-next-line no-console
   console.log('-> Running bup');
 
   if (!argv._.length) {
@@ -185,6 +187,7 @@ const run = async () => {
 const watch = async () =>
   chokidar
     .watch(watchPattern)
+    // eslint-disable-next-line no-console
     .on('all', debounce(() => run().catch(err => console.error(err)), 500));
 
 main(watchPattern ? watch() : run());

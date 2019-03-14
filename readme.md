@@ -9,9 +9,9 @@ Automated [rollup](https://github.com/rollup/rollup) build based on
 
 ## Table of Contents
 
-* [Install](#install)
-* [Usage](#usage)
-* [License](#license)
+- [Install](#install)
+- [Usage](#usage)
+- [License](#license)
 
 ## Install
 
