@@ -1,6 +1,6 @@
 {
   "name": "bup",
-  "version": "4.1.6",
+  "version": "5.0.0",
   "description": "Automated rollup build based on babelrc",
   "license": "BSD-3-Clause",
   "author": "Sérgio Ramos <mail@sergioramos.me>",
